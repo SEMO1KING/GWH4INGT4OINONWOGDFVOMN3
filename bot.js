@@ -1,58 +1,77 @@
-const Discord = require('discord.js');
-const fs = require('fs');
-const client = new Discord.Client();
-const { MessageEmbed } = require('discord.js');
+const express = require('express');
 
-const config = require('./config.json');
-let autoLineChannels = require('./channels.json');
+const app = express();
 
-client.login(process.env.token);
+app.get('/', (req, res) => {
+  res.send('7UP اهلا بك في سيستم')
+});
 
+app.listen(3000, () => {
+  console.log('7up GO GO ');
+});
+
+const Discord = require("discord.js");
+const ms = require("ms");
+const data = require("st.db");
+const axios = require("axios");
+const { QuickDB } = require('quick.db');
+const DB = new QuickDB()
+const client = new Discord.Client ({
+  intents: 3276799
+});
+
+const { MessageActionRow , MessageButton } = require('discord.js');
+
+const { DiscordModal,ModalBuilder,ModalField } = require ('discord-modal');
+DiscordModal(client)
+
+// تعديل 
+const prefix = "!"; // البريفكس الي بدكياه  
+
+require('events').EventEmitter.defaultMaxListeners = 9999999; // لا تلعب بالكود هذا
+
+// تعديل 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-  console.log(`Code by Wick Studio`);
-  console.log(`discord.gg/NFh7xtMNz2`);
+console.log(`Logged in as ${client.user.tag} Online`);
+client.user.setActivity(`here`, {type:"PLAYING"}) // حط الحالة الي بدكياه
+client.user.setStatus("online"); // هنا لو عايز تغير تعيين الحاله مثال
 });
 
-var http = require('http');
-http.createServer(function(req, res) {
-  res.write("I'm alive");
-  res.end();
-}).listen(8080);
+// ================================================================================
+// PLAYING   1
+// LISTENING 2
+// WATCHING  3
+// COMPETING 4
+// ================================================================================
+// online    1
+// idle      2
+// dnd       3
+// offline   4
+// ================================================================================
 
-client.on('message', message => {
-  if (message.author.bot) return;
+process.on("uncaughtException" , error => {
+return;
+})
 
-  if (message.content === '!line' && message.member.hasPermission('ADMINISTRATOR')) {
-    const channelId = message.channel.id;
-    let embed;
+process.on("unhandledRejection" , error => {
+return;
+})
 
-    if (autoLineChannels.includes(channelId)) {
-      autoLineChannels = autoLineChannels.filter(id => id !== channelId);
-      embed = new MessageEmbed()
-        .setColor('#FF0000')
-        .setTitle('❌ Channel Update')
-        .setDescription('This channel has been removed from the auto line channels.');
-    } else {
-      autoLineChannels.push(channelId);
-      embed = new MessageEmbed()
-        .setColor('#00FF00')
-        .setTitle('✅ Channel Update')
-        .setDescription('This channel has been added to the auto line channels.');
-    }
-
-    message.channel.send(embed)
-      .catch(console.error);
-
-    fs.writeFile('./channels.json', JSON.stringify(autoLineChannels, null, 4), err => {
-      if (err) console.error(err);
-    });
-  }
-
-  if (autoLineChannels.includes(message.channel.id)) {
-    message.channel.send({ content: config.imageUrl })
-      .catch(console.error);
-  }
+process.on("rejectionHandled", error => {
+return;
 });
 
-// code by Semo 
+// تنزل الاكواد الي تريدها هنا
+// يلزم يكون اصدار 13 اهم شي عشان يشتغلو 
+// سطر 73 نزل فيه اول كود وبسس
+
+
+
+
+
+
+
+
+client.login(process.env.token).catch((error) => {
+console.warn("\033[31m Token Invalid")
+})
